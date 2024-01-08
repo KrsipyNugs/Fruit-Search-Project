@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Search</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #00c3ff, #ff006a);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #search-container {
+            text-align: center;
+            position: relative;
+        }
+
+        #search-bar {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px; 
+        }
+
+        #suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            position: absolute;
+            width: 100%;
+            text-align: left;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd; 
+        }
+
+        #suggestions-list li {
+            color: black; 
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .highlighted {
+            background-color: #8d8d8d;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="Search fruit 🍎">
+        <ul id="suggestions-list"></ul>
+    </div>
+
+    <script>
+        const fruitList = ["Apple", "Banana", "Grape", "Orange", "Pineapple"];
+
+        const searchBar = document.getElementById('search-bar');
+        const suggestionsList = document.getElementById('suggestions-list');
+
+        searchBar.addEventListener('input', search);
+        suggestionsList.addEventListener('mouseover', highlightSuggestion);
+        suggestionsList.addEventListener('click', useSuggestion);
+
+        function search() {
+            const userInput = searchBar.value.toLowerCase();
+            const results = fruitList.filter(fruit => fruit.toLowerCase().includes(userInput));
+
+            displaySuggestions(results);
+        }
+
+        function displaySuggestions(suggestions) {
+            suggestionsList.innerHTML = '';
+
+            suggestions.forEach(suggestion => {
+                const listItem = document.createElement('li');
+                listItem.textContent = suggestion;
+                suggestionsList.appendChild(listItem);
+            });
+
+            if (suggestions.length > 0) {
+                suggestionsList.style.display = 'block';
+            } else {
+                suggestionsList.style.display = 'none';
+            }
+        }
+
+        function highlightSuggestion(event) {
+            const selectedSuggestion = event.target;
+            if (selectedSuggestion.tagName === 'LI') {
+                resetHighlight();
+                selectedSuggestion.classList.add('highlighted');
+            }
+        }
+
+        function resetHighlight() {
+            const highlightedItem = document.querySelector('.highlighted');
+            if (highlightedItem) {
+                highlightedItem.classList.remove('highlighted');
+            }
+        }
+
+        function useSuggestion() {
+            const highlightedItem = document.querySelector('.highlighted');
+            if (highlightedItem) {
+                searchBar.value = highlightedItem.textContent;
+                suggestionsList.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
